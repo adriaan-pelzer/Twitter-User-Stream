@@ -4,6 +4,7 @@ enum tweet_element tokenize (char *key) {
     if (!strncmp(key, "place", strlen(key))) { return TWTELM_PLACE; }
     if (!strncmp(key, "geo", strlen(key))) { return TWTELM_GEO; }
     if (!strncmp(key, "retweeted", strlen(key))) { return TWTELM_RETWEETED; }
+    if (!strncmp(key, "retweeted_status", strlen(key))) { return TWTELM_RETWEETED_STATUS; }
     if (!strncmp(key, "text", strlen(key))) { return TWTELM_TEXT; }
     if (!strncmp(key, "in_reply_to_status_id_str", strlen(key))) { return TWTELM_IN_REPLY_TO_STATUS_ID_STR; }
     if (!strncmp(key, "in_reply_to_status_id", strlen(key))) { return TWTELM_IN_REPLY_TO_STATUS_ID; }
@@ -54,12 +55,58 @@ int tweet_create_from_json (char *tweet_json_string) {
                     for (user = json_object_get_object(value)->head; user; user = user->next) {
                         ukey = (char *) user->k;
                         uvalue = (json_object *) user->v;
-                        printf("%s\n", ukey);
+
+                        switch (tokenize(ukey)) {
+                            case TWTELM_NAME:
+                            case TWTELM_SCREEN_NAME:
+                                printf ("%s: %s\n", ukey, json_object_get_string (uvalue));
+                                break;
+                            case TWTELM_SHOW_ALL_INLINE_MEDIA:
+                            case TWTELM_PROFILE_TEXT_COLOR:
+                            case TWTELM_STATUSES_COUNT:
+                            case TWTELM_PROFILE_BACKGROUND_IMAGE_URL_HTTPS:
+                            case TWTELM_PROFILE_BACKGROUND_IMAGE_URL:
+                            case TWTELM_SCREEN_NAME:
+                            case TWTELM_LISTED_COUNT:
+                            case TWTELM_FOLLOWING:
+                            case TWTELM_VERIFIED:
+                            case TWTELM_TIME_ZONE:
+                            case TWTELM_PROFILE_LINK_COLOR:
+                            case TWTELM_PROFILE_IMAGE_URL_HTTPS:
+                            case TWTELM_LOCATION:
+                            case TWTELM_IS_TRANSLATOR:
+                            case TWTELM_GEO_ENABLED:
+                            case TWTELM_FRIENDS_COUNT:
+                            case TWTELM_DESCRIPTION:
+                            case TWTELM_DEFAULT_PROFILE:
+                            case TWTELM_PROFILE_BACKGROUND_COLOR:
+                            case TWTELM_NOTIFICATIONS:
+                            case TWTELM_PROFILE_BACKGROUND_TILE:
+                            case TWTELM_FOLLOW_REQUEST_SENT:
+                            case TWTELM_PROFILE_SIDEBAR_FILL_COLOR:
+                            case TWTELM_PROTECTED:
+                            case TWTELM_DEFAULT_PROFILE_IMAGE:
+                            case TWTELM_CONTRIBUTORS_ENABLED:
+                            case TWTELM_PROFILE_SIDEBAR_BORDER_COLOR:
+                            case TWTELM_FOLLOWERS_COUNT:
+                            case TWTELM_PROFILE_IMAGE_URL:
+                            case TWTELM_NAME:
+                            case TWTELM_FAVOURITES_COUNT:
+                            case TWTELM_LANG:
+                            case TWTELM_PROFILE_USE_BACKGROUND_IMAGE:
+                            case TWTELM_UTC_OFFSET:
+                            case TWTELM_URL:
+                                break;
+                            case TWTELM_UNDEF:
+                                syslog(P_ERR, "Undefined token found in user object: %s", ukey);
+                                break;
+                        }
                     }
                     break;
                 case TWTELM_PLACE:
                 case TWTELM_GEO:
                 case TWTELM_RETWEETED:
+                case TWTELM_RETWEETED_STATUS:
                 case TWTELM_IN_REPLY_TO_STATUS_ID_STR:
                 case TWTELM_IN_REPLY_TO_STATUS_ID:
                 case TWTELM_IN_REPLY_TO_USER_ID_STR:
