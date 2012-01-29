@@ -299,7 +299,8 @@ over:
 
 int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
-    json_object *tweet = NULL;
+    char *key = NULL;
+    json_object *tweet = NULL, *value = NULL;
 
     if (strncmp(tweet_json_string, "\r", 1)) {
         if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
@@ -308,9 +309,16 @@ int tweet_create_from_json (char *tweet_json_string) {
             goto over;
         }
 
-        {
-            json_object_object_foreach(tweet, key, value) {
-                printf("Key found: %s\n", key);
+        for (entry = json_object_get_object(tweet)->head;  entry; entry = entry->next) {
+            key = (char *) entry->k;
+            value = (json_object *) entry->v;
+
+            switch (0) {
+                case (strncmp (key, "id_str", 6)):
+                case (strncmp (text, "text", 4)):
+                case (strncmp (text, "retweet_count", 13)):
+                    printf ("%s: %s\n", key, json_object_get_string (value));
+                    break;
             }
         }
     }
