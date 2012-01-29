@@ -309,7 +309,7 @@ int tweet_create_from_json (char *tweet_json_string) {
             goto over;
         }
 
-        for (entry = json_object_get_object(tweet)->head;  entry; entry = entry->next) {
+        for (entry = tweet->head; entry; entry = entry->next) {
             key = (char *) entry->k;
             value = (json_object *) entry->v;
 
