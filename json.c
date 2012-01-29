@@ -106,7 +106,7 @@ over:
     return return_str;
 }
 
-Tweet_p tweet_create_from_object (json_object *tweet) {
+/*Tweet_p tweet_create_from_object (json_object *tweet) {
     Tweet_p twt = NULL, _twt = NULL;
     json_object *tweet_retweeted_status = NULL,
                 *tweet_user = NULL,
@@ -295,9 +295,33 @@ over:
     }
 
     return twt;
-}
+}*/
 
 int tweet_create_from_json (char *tweet_json_string) {
+    int rc = -1;
+    json_object *tweet = NULL;
+
+    if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
+        syslog(P_DBG, "Cannot parse tweet json");
+        syslog(P_DBG, "%s", tweet_json_string);
+        goto over;
+    }
+
+    {
+        json_object_object_foreach(tweet, key, value) {
+            printf("Key found: %s\n", key);
+        }
+    }
+
+    rc = 0;
+over:
+    if (tweet)
+        json_object_put(tweet);
+
+    return rc;
+}
+
+/*int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
     json_object *tweet = NULL;
     Tweet_p twt = NULL;
@@ -313,7 +337,7 @@ int tweet_create_from_json (char *tweet_json_string) {
         goto over;
     }
 
-    /* Worker code - will store tweet id's in database in production code */
+    // Worker code - will store tweet id's in database in production code
 
     printf("User: @%s\n", twt->user->screen_name);
     printf("Tweet text: %s\n", twt->text);
@@ -329,4 +353,4 @@ over:
         json_object_put(tweet);
 
     return rc;
-}
+}*/
