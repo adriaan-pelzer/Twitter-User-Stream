@@ -63,11 +63,20 @@ enum tweet_element tokenize (char *key) {
     return TWTELM_UNDEF;
 }
 
+void store_tweet(char *tweet_id, char *user_id, char *retweet_count) {
+    printf ("Tweet ID: %s\nUser ID: %s\nRetweet Count: %s\n\n", tweet_id, user_id, retweet_count);
+    return;
+}
+
 int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
     char *key = NULL, *ukey = NULL;
     json_object *tweet = NULL, *value = NULL, *uvalue = NULL;
     struct lh_entry *entry = NULL, *user = NULL;
+
+    char *tweet_id = NULL;
+    char *user_id = NULL;
+    char *retweet_count = NULL;
 
     if (strncmp(tweet_json_string, "\r", 1)) {
         if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
@@ -82,9 +91,10 @@ int tweet_create_from_json (char *tweet_json_string) {
 
             switch (tokenize(key)) {
                 case TWTELM_ID_STR:
-                case TWTELM_TEXT:
+                    tweet_id = json_object_get_string (value);
+                    break;
                 case TWTELM_RETWEET_COUNT:
-                    printf ("%s: %s\n", key, json_object_get_string (value));
+                    retweet_count = json_object_get_string (value);
                     break;
                 case TWTELM_USER:
                     for (user = json_object_get_object(value)->head; user; user = user->next) {
@@ -94,8 +104,6 @@ int tweet_create_from_json (char *tweet_json_string) {
                         switch (tokenize(ukey)) {
                             case TWTELM_NAME:
                             case TWTELM_SCREEN_NAME:
-                                printf ("%s: %s\n", ukey, json_object_get_string (uvalue));
-                                break;
                             case TWTELM_SHOW_ALL_INLINE_MEDIA:
                             case TWTELM_PROFILE_TEXT_COLOR:
                             case TWTELM_STATUSES_COUNT:
@@ -131,7 +139,9 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_URL:
                             case TWTELM_CREATED_AT:
                             case TWTELM_ID:
+                                break;
                             case TWTELM_ID_STR:
+                                user_id = json_object_get_string (uvalue);
                                 break;
                             case TWTELM_UNDEF:
                                 syslog(P_ERR, "Undefined token found in user object: %s", ukey);
@@ -141,6 +151,7 @@ int tweet_create_from_json (char *tweet_json_string) {
                         }
                     }
                     break;
+                case TWTELM_TEXT:
                 case TWTELM_PLACE:
                 case TWTELM_GEO:
                 case TWTELM_RETWEETED:
@@ -167,6 +178,10 @@ int tweet_create_from_json (char *tweet_json_string) {
                 default:
                     syslog(P_ERR, "Out-of-place token found: %s", key);
             }
+        }
+
+        if (tweet_id && user_id && retweet_count) {
+            store_tweet(tweet_id, user_id, retweet_count);
         }
     }
 
