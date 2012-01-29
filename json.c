@@ -301,15 +301,17 @@ int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
     json_object *tweet = NULL;
 
-    if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
-        syslog(P_DBG, "Cannot parse tweet json");
-        syslog(P_DBG, "%s", tweet_json_string);
-        goto over;
-    }
+    if (strncmp(tweet_json_string, "\r", 1)) {
+        if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
+            syslog(P_DBG, "Cannot parse tweet json");
+            syslog(P_DBG, "%s", tweet_json_string);
+            goto over;
+        }
 
-    {
-        json_object_object_foreach(tweet, key, value) {
-            printf("Key found: %s\n", key);
+        {
+            json_object_object_foreach(tweet, key, value) {
+                printf("Key found: %s\n", key);
+            }
         }
     }
 
