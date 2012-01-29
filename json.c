@@ -314,12 +314,8 @@ int tweet_create_from_json (char *tweet_json_string) {
             key = (char *) entry->k;
             value = (json_object *) entry->v;
 
-            switch (0) {
-                case (strncmp (key, "id_str", 6)):
-                case (strncmp (text, "text", 4)):
-                case (strncmp (text, "retweet_count", 13)):
-                    printf ("%s: %s\n", key, json_object_get_string (value));
-                    break;
+            if(!(strncmp(key, "id_str", 6)) || !(strncmp(text, "text", 4)) || !(strncmp(text, "retweet_count", 13))) {
+                printf ("%s: %s\n", key, json_object_get_string (value));
             }
         }
     }
