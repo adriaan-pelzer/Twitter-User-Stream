@@ -1,5 +1,5 @@
 #MCFLAGS=`mysql_config --cflags`
-CFLAGS=-Wall -g -DDEBUG -I/usr/local/include
+CFLAGS=-Wall -I/usr/local/include
 #MLIBS=`mysql_config --libs`
 LIBS=-L/usr/local/lib -lcurl -loauth -ljson
 
