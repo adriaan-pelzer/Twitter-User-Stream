@@ -66,7 +66,6 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_STATUSES_COUNT:
                             case TWTELM_PROFILE_BACKGROUND_IMAGE_URL_HTTPS:
                             case TWTELM_PROFILE_BACKGROUND_IMAGE_URL:
-                            case TWTELM_SCREEN_NAME:
                             case TWTELM_LISTED_COUNT:
                             case TWTELM_FOLLOWING:
                             case TWTELM_VERIFIED:
@@ -90,7 +89,6 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_PROFILE_SIDEBAR_BORDER_COLOR:
                             case TWTELM_FOLLOWERS_COUNT:
                             case TWTELM_PROFILE_IMAGE_URL:
-                            case TWTELM_NAME:
                             case TWTELM_FAVOURITES_COUNT:
                             case TWTELM_LANG:
                             case TWTELM_PROFILE_USE_BACKGROUND_IMAGE:
@@ -100,6 +98,8 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_UNDEF:
                                 syslog(P_ERR, "Undefined token found in user object: %s", ukey);
                                 break;
+                            default:
+                                syslog(P_ERR, "Out-of-place token found in user object: %s", ukey);
                         }
                     }
                     break;
@@ -126,6 +126,8 @@ int tweet_create_from_json (char *tweet_json_string) {
                 case TWTELM_UNDEF:
                     syslog(P_ERR, "Undefined token found: %s", key);
                     break;
+                default:
+                    syslog(P_ERR, "Out-of-place token found: %s", key);
             }
         }
     }
