@@ -299,19 +299,7 @@ int tweet_create_from_json (char *tweet_json_string) {
     int i = 0, rc = -1;
     json_object *tweet = NULL;
     Tweet_p twt = NULL;
-    Ids_p ids = NULL;
-    MYSQL *conn = NULL;
     char one_of_our_users = 0;
-
-    if ((conn = db_connect()) == NULL) {
-        syslog(P_ERR, "Cannot connect to database");
-        goto over;
-    }
-
-    if ((ids = get_ids(conn)) == NULL) {
-        syslog(P_ERR, "Cannot get id list from database");
-        goto over;
-    }
 
     if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
         syslog(P_DBG, "Cannot parse tweet json");
@@ -324,51 +312,13 @@ int tweet_create_from_json (char *tweet_json_string) {
         goto over;
     }
 
-    for (i = 0; i < ids->ids_len; i++) {
-        if (!strncmp(ids->ids[i], twt->user->id_str, strlen(ids->ids[i]))) {
-            one_of_our_users = 1;
-            break;
-        }
-    }
+    /* Worker code - will store tweet id's in database in production code */
 
-    if (one_of_our_users) { /* skip mentions */
-        if (twt->retweeted_status == NULL) { /* skip retweets */
-            if (twt->entities) {
-                if (twt->entities->media_len > 0) {
-                    for (i = 0; i < twt->entities->media_len; i++) {
-                        if (!strncmp (twt->entities->media[i].type, "photo", 5)) {
-                            syslog(P_DBG, "Attached MEDIA: %s", twt->entities->media[i].expanded_url);
-                            if (send_email(twt->user->id_str, twt->entities->media[i].expanded_url, NULL, twt->text) != 0) {
-                                syslog(P_ERR, "All emails failed");
-                            }
-                            break;
-                        }
-                    }
-                } else if (twt->entities->url_len > 0) {
-                    for (i = 0; i < twt->entities->url_len; i++) {
-                        syslog(P_DBG, "Attached URL: %s", twt->entities->urls[i].url);
-                        syslog(P_DBG, "Attached URL (expanded): %s", twt->entities->urls[i].expanded_url);
-                        if (send_email(twt->user->id_str, NULL, twt->entities->urls[i].expanded_url, twt->text) != 0) {
-                            syslog(P_ERR, "All emails failed");
-                        }
-                    }
-                } else {
-                    syslog(P_DBG, "Photoless tweet");
-                }
-            }
-        }
-    }
+    printf("User: @%s\n", twt->user->screen_name);
+    printf("Tweet text: %s\n", twt->text);
 
     rc = 0;
 over:
-    if (ids) {
-        free_ids(ids);
-    }
-
-    if (conn) {
-        db_disconnect(conn);
-    }
-
     if (twt) {
         free_tweet (twt);
         twt = NULL;
