@@ -37,7 +37,7 @@ enum tweet_element tokenize (char *key) {
     if (!strncmp(key, "verified", strlen(key))) { return TWTELM_VERIFIED; }
     if (!strncmp(key, "time_zone", strlen(key))) { return TWTELM_TIME_ZONE; }
     if (!strncmp(key, "profile_link_color", strlen(key))) { return TWTELM_PROFILE_LINK_COLOR; }
-    if (!strncmp(key, "profile_image_url_https", strlen(key))) { return PROFILE_IMAGE_URL_HTTPS; }
+    if (!strncmp(key, "profile_image_url_https", strlen(key))) { return TWTELM_PROFILE_IMAGE_URL_HTTPS; }
     if (!strncmp(key, "location", strlen(key))) { return TWTELM_LOCATION; }
     if (!strncmp(key, "is_translator", strlen(key))) { return TWTELM_IS_TRANSLATOR; }
     if (!strncmp(key, "geo_enabled", strlen(key))) { return TWTELM_GEO_ENABLED; }
