@@ -25,6 +25,41 @@ enum tweet_element tokenize (char *key) {
     if (!strncmp(key, "in_reply_to_screen_name", strlen(key))) { return TWTELM_IN_REPLY_TO_SCREEN_NAME; }
     if (!strncmp(key, "id", strlen(key))) { return TWTELM_ID; }
     if (!strncmp(key, "entities", strlen(key))) { return TWTELM_ENTITIES; }
+    if (!strncmp(key, "name", strlen(key))) { return TWTELM_NAME; }
+    if (!strncmp(key, "screen_name", strlen(key))) { return TWTELM_SCREEN_NAME; }
+    if (!strncmp(key, "show_all_inline_media", strlen(key))) { return TWTELM_SHOW_ALL_INLINE_MEDIA; }
+    if (!strncmp(key, "profile_text_color", strlen(key))) { return TWTELM_PROFILE_TEXT_COLOR; }
+    if (!strncmp(key, "statuses_count", strlen(key))) { return TWTELM_STATUSES_COUNT; }
+    if (!strncmp(key, "profile_background_image_url_https", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL_HTTPS; }
+    if (!strncmp(key, "profile_background_image_url", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL; }
+    if (!strncmp(key, "listed_count", strlen(key))) { return TWTELM_LISTED_COUNT; }
+    if (!strncmp(key, "following", strlen(key))) { return TWTELM_FOLLOWING; }
+    if (!strncmp(key, "verified", strlen(key))) { return TWTELM_VERIFIED; }
+    if (!strncmp(key, "time_zone", strlen(key))) { return TWTELM_TIME_ZONE; }
+    if (!strncmp(key, "profile_link_color", strlen(key))) { return TWTELM_PROFILE_LINK_COLOR; }
+    if (!strncmp(key, "profile_image_url_https", strlen(key))) { return PROFILE_IMAGE_URL_HTTPS; }
+    if (!strncmp(key, "location", strlen(key))) { return TWTELM_LOCATION; }
+    if (!strncmp(key, "is_translator", strlen(key))) { return TWTELM_IS_TRANSLATOR; }
+    if (!strncmp(key, "geo_enabled", strlen(key))) { return TWTELM_GEO_ENABLED; }
+    if (!strncmp(key, "friends_count", strlen(key))) { return TWTELM_FRIENDS_COUNT; }
+    if (!strncmp(key, "description", strlen(key))) { return TWTELM_DESCRIPTION; }
+    if (!strncmp(key, "default_profile", strlen(key))) { return TWTELM_DEFAULT_PROFILE; }
+    if (!strncmp(key, "profile_background_color", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_COLOR; }
+    if (!strncmp(key, "notifications", strlen(key))) { return TWTELM_NOTIFICATIONS; }
+    if (!strncmp(key, "profile_background_tile", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_TILE; }
+    if (!strncmp(key, "follow_request_sent", strlen(key))) { return TWTELM_FOLLOW_REQUEST_SENT; }
+    if (!strncmp(key, "profile_sidebar_fill_color", strlen(key))) { return TWTELM_PROFILE_SIDEBAR_FILL_COLOR; }
+    if (!strncmp(key, "protected", strlen(key))) { return TWTELM_PROTECTED; }
+    if (!strncmp(key, "default_profile_image", strlen(key))) { return TWTELM_DEFAULT_PROFILE_IMAGE; }
+    if (!strncmp(key, "contributors_enabled", strlen(key))) { return TWTELM_CONTRIBUTORS_ENABLED; }
+    if (!strncmp(key, "profile_sidebar_border_color", strlen(key))) { return TWTELM_PROFILE_SIDEBAR_BORDER_COLOR; }
+    if (!strncmp(key, "followers_count", strlen(key))) { return TWTELM_FOLLOWERS_COUNT; }
+    if (!strncmp(key, "profile_image_url", strlen(key))) { return TWTELM_PROFILE_IMAGE_URL; }
+    if (!strncmp(key, "favourites_count", strlen(key))) { return TWTELM_FAVOURITES_COUNT; }
+    if (!strncmp(key, "lang", strlen(key))) { return TWTELM_LANG; }
+    if (!strncmp(key, "profile_use_background_image", strlen(key))) { return TWTELM_PROFILE_USE_BACKGROUND_IMAGE; }
+    if (!strncmp(key, "utc_offset", strlen(key))) { return TWTELM_UTC_OFFSET; }
+    if (!strncmp(key, "url", strlen(key))) { return TWTELM_URL; }
     return TWTELM_UNDEF;
 }
 
@@ -94,6 +129,9 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_PROFILE_USE_BACKGROUND_IMAGE:
                             case TWTELM_UTC_OFFSET:
                             case TWTELM_URL:
+                            case TWTELM_CREATED_AT:
+                            case TWTELM_ID:
+                            case TWTELM_ID_STR:
                                 break;
                             case TWTELM_UNDEF:
                                 syslog(P_ERR, "Undefined token found in user object: %s", ukey);
