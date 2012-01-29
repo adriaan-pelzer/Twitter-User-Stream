@@ -296,10 +296,9 @@ over:
 }
 
 int tweet_create_from_json (char *tweet_json_string) {
-    int i = 0, rc = -1;
+    int rc = -1;
     json_object *tweet = NULL;
     Tweet_p twt = NULL;
-    char one_of_our_users = 0;
 
     if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
         syslog(P_DBG, "Cannot parse tweet json");
