@@ -12,6 +12,13 @@ Installation Dependencies
 
 Run *make* in the source directory. It will create a binary called *usbot*. This is the daemon, which could be started up with the *start_bot.sh* script. The script checks if the daemon is already running before starting it, to make it suitable for use in cron, as a "watchdog" script.
 
+Usage
+-----
+
+usbot -h: Show help and exit
+usbot -n: Run interactively (not as daemon)
+usbot: daemonize
+
 Customization
 -------------
 
