@@ -300,7 +300,7 @@ over:
 int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
     char *key = NULL;
-    json_object *tweet = NULL, *value = NULL;
+    json_object *tweet = NULL, *entry = NULL, *value = NULL;
 
     if (strncmp(tweet_json_string, "\r", 1)) {
         if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
