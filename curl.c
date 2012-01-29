@@ -216,8 +216,5 @@ over:
     if (mem)
         freeMemoryStruct(mem);
 
-    if (searchbuf)
-        free(searchbuf);
-
     return cr;
 }
