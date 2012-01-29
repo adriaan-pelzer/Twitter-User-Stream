@@ -300,7 +300,8 @@ over:
 int tweet_create_from_json (char *tweet_json_string) {
     int rc = -1;
     char *key = NULL;
-    json_object *tweet = NULL, *entry = NULL, *value = NULL;
+    json_object *tweet = NULL, *value = NULL;
+    struct lh_entry *entry = NULL;
 
     if (strncmp(tweet_json_string, "\r", 1)) {
         if ((tweet = json_tokener_parse(tweet_json_string)) == NULL) {
@@ -309,7 +310,7 @@ int tweet_create_from_json (char *tweet_json_string) {
             goto over;
         }
 
-        for (entry = (json_object *) json_object_get_object(tweet)->head; entry; entry = (json_object *) json_object_get_object(entry)->next) {
+        for (entry = json_object_get_object(tweet)->head; entry; entry = entry->next) {
             key = (char *) entry->k;
             value = (json_object *) entry->v;
 
