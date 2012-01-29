@@ -50,6 +50,7 @@ int tweet_create_from_json (char *tweet_json_string) {
                 case TWTELM_RETWEET_COUNT:
                     printf ("%s: %s\n", key, json_object_get_string (value));
                     break;
+                default:
             }
         }
     }
