@@ -50,7 +50,35 @@ int tweet_create_from_json (char *tweet_json_string) {
                 case TWTELM_RETWEET_COUNT:
                     printf ("%s: %s\n", key, json_object_get_string (value));
                     break;
-                default:
+                case TWTELM_USER:
+                    for (user = json_object_get_object(value)->head; user; user = user->next) {
+                        ukey = (char *) user->k;
+                        uvalue = (json_object *) user->v;
+                        printf("%s\n", ukey);
+                    }
+                    break;
+                case TWTELM_PLACE:
+                case TWTELM_GEO:
+                case TWTELM_RETWEETED:
+                case TWTELM_IN_REPLY_TO_STATUS_ID_STR:
+                case TWTELM_IN_REPLY_TO_STATUS_ID:
+                case TWTELM_IN_REPLY_TO_USER_ID_STR:
+                case TWTELM_TRUNCATED:
+                case TWTELM_POSSIBLY_SENSITIVE_EDITABLE:
+                case TWTELM_SOURCE:
+                case TWTELM_IN_REPLY_TO_USER_ID:
+                case TWTELM_CONTRIBUTORS:
+                case TWTELM_FAVORITED:
+                case TWTELM_CREATED_AT:
+                case TWTELM_COORDINATES:
+                case TWTELM_POSSIBLY_SENSITIVE:
+                case TWTELM_IN_REPLY_TO_SCREEN_NAME:
+                case TWTELM_ID:
+                case TWTELM_ENTITIES:
+                    break;
+                case TWTELM_UNDEF:
+                    syslog(P_ERR, "Undefined token found: %s", key);
+                    break;
             }
         }
     }
