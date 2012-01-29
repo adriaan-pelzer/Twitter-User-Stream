@@ -91,10 +91,10 @@ int tweet_create_from_json (char *tweet_json_string) {
 
             switch (tokenize(key)) {
                 case TWTELM_ID_STR:
-                    tweet_id = json_object_get_string (value);
+                    tweet_id = (char *) json_object_get_string(value);
                     break;
                 case TWTELM_RETWEET_COUNT:
-                    retweet_count = json_object_get_string (value);
+                    retweet_count = (char *) json_object_get_string (value);
                     break;
                 case TWTELM_USER:
                     for (user = json_object_get_object(value)->head; user; user = user->next) {
@@ -141,7 +141,7 @@ int tweet_create_from_json (char *tweet_json_string) {
                             case TWTELM_ID:
                                 break;
                             case TWTELM_ID_STR:
-                                user_id = json_object_get_string (uvalue);
+                                user_id = (char *) json_object_get_string (uvalue);
                                 break;
                             case TWTELM_UNDEF:
                                 syslog(P_ERR, "Undefined token found in user object: %s", ukey);
