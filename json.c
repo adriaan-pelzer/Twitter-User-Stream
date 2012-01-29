@@ -152,133 +152,135 @@ Tweet_p tweet_create_from_object (json_object *tweet) {
     _twt->entities->url_len = 0;
     _twt->entities->media_len = 0;
 
-    if ((tweet_retweeted_status = json_object_object_get (tweet, "retweeted_status"))) {
-        if (!(_twt->retweeted_status = tweet_create_from_object (tweet_retweeted_status))) {
-            syslog (P_ERR, "Cannot get retweeted status\n");
-            goto over;
-        }
-    }
-
-    if (!(_twt->text = string_from_object (tweet, "text"))) {
-        goto over;
-    }
-
-    if (!(_twt->id_str = string_from_object (tweet, "id_str"))) {
-        syslog (P_ERR, "Cannot retrieve id string");
-        goto over;
-    }
-
-    if (!(_twt->created_at = string_from_object (tweet, "created_at"))) {
-        syslog (P_ERR, "Cannot retrieve created_at string");
-        goto over;
-    }
-
-    if ((_twt->retweet_count = int_from_string_object (tweet, "retweet_count")) == -1) {
-        syslog (P_ERR, "Cannot retrieve retweet_count int");
-    }
-
-    if (!(tweet_user = json_object_object_get (tweet, "user"))) {
-        syslog (P_ERR, "Cannot retrieve user object");
-        goto over;
-    }
-
-    if (!(_twt->user->id_str = string_from_object (tweet_user, "id_str"))) {
-        syslog (P_ERR, "Cannot retrieve user id_str string");
-        goto over;
-    }
-
-    if (!(_twt->user->screen_name = string_from_object (tweet_user, "screen_name"))) {
-        syslog (P_ERR, "Cannot retrieve user screen_name string");
-        goto over;
-    }
-
-    if (!(_twt->user->name = string_from_object (tweet_user, "name"))) {
-        syslog (P_ERR, "Cannot retrieve user name string");
-        goto over;
-    }
-
-    _twt->user->description = string_from_object (tweet_user, "description");
-
-    if (!(_twt->user->profile_image_url = string_from_object (tweet_user, "profile_image_url"))) {
-        syslog (P_ERR, "Cannot retrieve user profile_image_url string");
-        goto over;
-    }
-
-    if (!(tweet_entities = json_object_object_get (tweet, "entities"))) {
-        syslog (P_ERR, "Cannot retrieve entities object");
-        goto over;
-    } else {
-        if ((tweet_urls = json_object_object_get (tweet_entities, "urls"))) {
-            _twt->entities->url_len = json_object_array_length(tweet_urls);
-
-            if (!(_twt->entities->urls = malloc (sizeof(struct Url) * _twt->entities->url_len))) {
-                syslog (P_ERR, "Cannot allocate memory for entity URLs");
+    if (json_object_object_get (tweet, "friends") == NULL) {
+        if ((tweet_retweeted_status = json_object_object_get (tweet, "retweeted_status"))) {
+            if (!(_twt->retweeted_status = tweet_create_from_object (tweet_retweeted_status))) {
+                syslog (P_ERR, "Cannot get retweeted status\n");
                 goto over;
             }
+        }
 
-            for (i = 0; i < _twt->entities->url_len; i++) {
-                _twt->entities->urls[i].url = NULL;
-                _twt->entities->urls[i].expanded_url = NULL;
-                _twt->entities->urls[i].display_url = NULL;
+        if (!(_twt->text = string_from_object (tweet, "text"))) {
+            goto over;
+        }
 
-                if (!(tweet_url = json_object_array_get_idx(tweet_urls, i))) {
-                    syslog (P_ERR, "Cannot retrieve url number %d from array", i);
+        if (!(_twt->id_str = string_from_object (tweet, "id_str"))) {
+            syslog (P_ERR, "Cannot retrieve id string");
+            goto over;
+        }
+
+        if (!(_twt->created_at = string_from_object (tweet, "created_at"))) {
+            syslog (P_ERR, "Cannot retrieve created_at string");
+            goto over;
+        }
+
+        if ((_twt->retweet_count = int_from_string_object (tweet, "retweet_count")) == -1) {
+            syslog (P_ERR, "Cannot retrieve retweet_count int");
+        }
+
+        if (!(tweet_user = json_object_object_get (tweet, "user"))) {
+            syslog (P_ERR, "Cannot retrieve user object");
+            goto over;
+        }
+
+        if (!(_twt->user->id_str = string_from_object (tweet_user, "id_str"))) {
+            syslog (P_ERR, "Cannot retrieve user id_str string");
+            goto over;
+        }
+
+        if (!(_twt->user->screen_name = string_from_object (tweet_user, "screen_name"))) {
+            syslog (P_ERR, "Cannot retrieve user screen_name string");
+            goto over;
+        }
+
+        if (!(_twt->user->name = string_from_object (tweet_user, "name"))) {
+            syslog (P_ERR, "Cannot retrieve user name string");
+            goto over;
+        }
+
+        _twt->user->description = string_from_object (tweet_user, "description");
+
+        if (!(_twt->user->profile_image_url = string_from_object (tweet_user, "profile_image_url"))) {
+            syslog (P_ERR, "Cannot retrieve user profile_image_url string");
+            goto over;
+        }
+
+        if (!(tweet_entities = json_object_object_get (tweet, "entities"))) {
+            syslog (P_ERR, "Cannot retrieve entities object");
+            goto over;
+        } else {
+            if ((tweet_urls = json_object_object_get (tweet_entities, "urls"))) {
+                _twt->entities->url_len = json_object_array_length(tweet_urls);
+
+                if (!(_twt->entities->urls = malloc (sizeof(struct Url) * _twt->entities->url_len))) {
+                    syslog (P_ERR, "Cannot allocate memory for entity URLs");
                     goto over;
-                } else {
-                    if (!(_twt->entities->urls[i].url = string_from_object (tweet_url, "url"))) {
-                        syslog (P_ERR, "Cannot retrieve url number %d element (url)", i);
+                }
+
+                for (i = 0; i < _twt->entities->url_len; i++) {
+                    _twt->entities->urls[i].url = NULL;
+                    _twt->entities->urls[i].expanded_url = NULL;
+                    _twt->entities->urls[i].display_url = NULL;
+
+                    if (!(tweet_url = json_object_array_get_idx(tweet_urls, i))) {
+                        syslog (P_ERR, "Cannot retrieve url number %d from array", i);
                         goto over;
-                    }
-                    if (!(_twt->entities->urls[i].expanded_url = string_from_object (tweet_url, "expanded_url"))) {
-                        syslog (P_ERR, "Cannot retrieve url number %d element (expanded_url)", i);
-                        goto over;
-                    }
-                    if (!(_twt->entities->urls[i].display_url = string_from_object (tweet_url, "display_url"))) {
-                        syslog (P_ERR, "Cannot retrieve url number %d element (display_url)", i);
-                        goto over;
+                    } else {
+                        if (!(_twt->entities->urls[i].url = string_from_object (tweet_url, "url"))) {
+                            syslog (P_ERR, "Cannot retrieve url number %d element (url)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->urls[i].expanded_url = string_from_object (tweet_url, "expanded_url"))) {
+                            syslog (P_ERR, "Cannot retrieve url number %d element (expanded_url)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->urls[i].display_url = string_from_object (tweet_url, "display_url"))) {
+                            syslog (P_ERR, "Cannot retrieve url number %d element (display_url)", i);
+                            goto over;
+                        }
                     }
                 }
             }
-        }
 
-        if ((tweet_medias = json_object_object_get (tweet_entities, "media"))) {
-            _twt->entities->media_len = json_object_array_length(tweet_medias);
+            if ((tweet_medias = json_object_object_get (tweet_entities, "media"))) {
+                _twt->entities->media_len = json_object_array_length(tweet_medias);
 
-            if (!(_twt->entities->media = malloc (sizeof(struct Media) * _twt->entities->media_len))) {
-                syslog (P_ERR, "Cannot allocate memory for entity URLs");
-                goto over;
-            }
-
-            for (i = 0; i < _twt->entities->media_len; i++) {
-                _twt->entities->media[i].url = NULL;
-                _twt->entities->media[i].expanded_url = NULL;
-                _twt->entities->media[i].display_url = NULL;
-                _twt->entities->media[i].media_url = NULL;
-                _twt->entities->media[i].type = NULL;
-
-                if (!(tweet_media = json_object_array_get_idx(tweet_medias, i))) {
-                    syslog (P_ERR, "Cannot retrieve media number %d from array", i);
+                if (!(_twt->entities->media = malloc (sizeof(struct Media) * _twt->entities->media_len))) {
+                    syslog (P_ERR, "Cannot allocate memory for entity URLs");
                     goto over;
-                } else {
-                    if (!(_twt->entities->media[i].type = string_from_object (tweet_media, "type"))) {
-                        syslog (P_ERR, "Cannot retrieve media number %d element (type)", i);
+                }
+
+                for (i = 0; i < _twt->entities->media_len; i++) {
+                    _twt->entities->media[i].url = NULL;
+                    _twt->entities->media[i].expanded_url = NULL;
+                    _twt->entities->media[i].display_url = NULL;
+                    _twt->entities->media[i].media_url = NULL;
+                    _twt->entities->media[i].type = NULL;
+
+                    if (!(tweet_media = json_object_array_get_idx(tweet_medias, i))) {
+                        syslog (P_ERR, "Cannot retrieve media number %d from array", i);
                         goto over;
-                    }
-                    if (!(_twt->entities->media[i].url = string_from_object (tweet_media, "url"))) {
-                        syslog (P_ERR, "Cannot retrieve media number %d element (url)", i);
-                        goto over;
-                    }
-                    if (!(_twt->entities->media[i].expanded_url = string_from_object (tweet_media, "expanded_url"))) {
-                        syslog (P_ERR, "Cannot retrieve media number %d element (expanded_url)", i);
-                        goto over;
-                    }
-                    if (!(_twt->entities->media[i].display_url = string_from_object (tweet_media, "display_url"))) {
-                        syslog (P_ERR, "Cannot retrieve media number %d element (display_url)", i);
-                        goto over;
-                    }
-                    if (!(_twt->entities->media[i].media_url = string_from_object (tweet_media, "media_url"))) {
-                        syslog (P_ERR, "Cannot retrieve media number %d element (media_url)", i);
-                        goto over;
+                    } else {
+                        if (!(_twt->entities->media[i].type = string_from_object (tweet_media, "type"))) {
+                            syslog (P_ERR, "Cannot retrieve media number %d element (type)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->media[i].url = string_from_object (tweet_media, "url"))) {
+                            syslog (P_ERR, "Cannot retrieve media number %d element (url)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->media[i].expanded_url = string_from_object (tweet_media, "expanded_url"))) {
+                            syslog (P_ERR, "Cannot retrieve media number %d element (expanded_url)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->media[i].display_url = string_from_object (tweet_media, "display_url"))) {
+                            syslog (P_ERR, "Cannot retrieve media number %d element (display_url)", i);
+                            goto over;
+                        }
+                        if (!(_twt->entities->media[i].media_url = string_from_object (tweet_media, "media_url"))) {
+                            syslog (P_ERR, "Cannot retrieve media number %d element (media_url)", i);
+                            goto over;
+                        }
                     }
                 }
             }
