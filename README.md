@@ -15,9 +15,9 @@ Run *make* in the source directory. It will create a binary called *usbot*. This
 Usage
 -----
 
-usbot -h: Show help and exit
-usbot -n: Run interactively (not as daemon)
-usbot: daemonize
+* usbot -h: Show help and exit
+* usbot -n: Run interactively (not as daemon)
+* usbot: daemonize
 
 Customization
 -------------
