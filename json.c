@@ -1,65 +1,69 @@
 #include "includes.h"
 
+char compare(const char *a, const char *b) {
+    return ((strlen(a) == strlen(b)) && (!strncmp(a, b, strlen(a))));
+}
+
 enum tweet_element tokenize (char *key) {
-    if (!strncmp(key, "place", strlen(key))) { return TWTELM_PLACE; }
-    if (!strncmp(key, "geo", strlen(key))) { return TWTELM_GEO; }
-    if (!strncmp(key, "retweeted", strlen(key))) { return TWTELM_RETWEETED; }
-    if (!strncmp(key, "retweeted_status", strlen(key))) { return TWTELM_RETWEETED_STATUS; }
-    if (!strncmp(key, "text", strlen(key))) { return TWTELM_TEXT; }
-    if (!strncmp(key, "in_reply_to_status_id_str", strlen(key))) { return TWTELM_IN_REPLY_TO_STATUS_ID_STR; }
-    if (!strncmp(key, "in_reply_to_status_id", strlen(key))) { return TWTELM_IN_REPLY_TO_STATUS_ID; }
-    if (!strncmp(key, "in_reply_to_user_id_str", strlen(key))) { return TWTELM_IN_REPLY_TO_USER_ID_STR; }
-    if (!strncmp(key, "in_reply_to_user_id", strlen(key))) { return TWTELM_IN_REPLY_TO_USER_ID; }
-    if (!strncmp(key, "in_reply_to_user_id", strlen(key))) { return TWTELM_IN_REPLY_TO_USER_ID; }
-    if (!strncmp(key, "truncated", strlen(key))) { return TWTELM_TRUNCATED; }
-    if (!strncmp(key, "possibly_sensitive_editable", strlen(key))) { return TWTELM_POSSIBLY_SENSITIVE_EDITABLE; }
-    if (!strncmp(key, "source", strlen(key))) { return TWTELM_SOURCE; }
-    if (!strncmp(key, "contributors", strlen(key))) { return TWTELM_CONTRIBUTORS; }
-    if (!strncmp(key, "retweet_count", strlen(key))) { return TWTELM_RETWEET_COUNT; }
-    if (!strncmp(key, "favorited", strlen(key))) { return TWTELM_FAVORITED; }
-    if (!strncmp(key, "created_at", strlen(key))) { return TWTELM_CREATED_AT; }
-    if (!strncmp(key, "coordinates", strlen(key))) { return TWTELM_COORDINATES; }
-    if (!strncmp(key, "possibly_sensitive", strlen(key))) { return TWTELM_POSSIBLY_SENSITIVE; }
-    if (!strncmp(key, "id_str", strlen(key))) { return TWTELM_ID_STR; }
-    if (!strncmp(key, "user", strlen(key))) { return TWTELM_USER; }
-    if (!strncmp(key, "in_reply_to_screen_name", strlen(key))) { return TWTELM_IN_REPLY_TO_SCREEN_NAME; }
-    if (!strncmp(key, "id", strlen(key))) { return TWTELM_ID; }
-    if (!strncmp(key, "entities", strlen(key))) { return TWTELM_ENTITIES; }
-    if (!strncmp(key, "name", strlen(key))) { return TWTELM_NAME; }
-    if (!strncmp(key, "screen_name", strlen(key))) { return TWTELM_SCREEN_NAME; }
-    if (!strncmp(key, "show_all_inline_media", strlen(key))) { return TWTELM_SHOW_ALL_INLINE_MEDIA; }
-    if (!strncmp(key, "profile_text_color", strlen(key))) { return TWTELM_PROFILE_TEXT_COLOR; }
-    if (!strncmp(key, "statuses_count", strlen(key))) { return TWTELM_STATUSES_COUNT; }
-    if (!strncmp(key, "profile_background_image_url_https", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL_HTTPS; }
-    if (!strncmp(key, "profile_background_image_url", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL; }
-    if (!strncmp(key, "listed_count", strlen(key))) { return TWTELM_LISTED_COUNT; }
-    if (!strncmp(key, "following", strlen(key))) { return TWTELM_FOLLOWING; }
-    if (!strncmp(key, "verified", strlen(key))) { return TWTELM_VERIFIED; }
-    if (!strncmp(key, "time_zone", strlen(key))) { return TWTELM_TIME_ZONE; }
-    if (!strncmp(key, "profile_link_color", strlen(key))) { return TWTELM_PROFILE_LINK_COLOR; }
-    if (!strncmp(key, "profile_image_url_https", strlen(key))) { return TWTELM_PROFILE_IMAGE_URL_HTTPS; }
-    if (!strncmp(key, "location", strlen(key))) { return TWTELM_LOCATION; }
-    if (!strncmp(key, "is_translator", strlen(key))) { return TWTELM_IS_TRANSLATOR; }
-    if (!strncmp(key, "geo_enabled", strlen(key))) { return TWTELM_GEO_ENABLED; }
-    if (!strncmp(key, "friends_count", strlen(key))) { return TWTELM_FRIENDS_COUNT; }
-    if (!strncmp(key, "description", strlen(key))) { return TWTELM_DESCRIPTION; }
-    if (!strncmp(key, "default_profile", strlen(key))) { return TWTELM_DEFAULT_PROFILE; }
-    if (!strncmp(key, "profile_background_color", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_COLOR; }
-    if (!strncmp(key, "notifications", strlen(key))) { return TWTELM_NOTIFICATIONS; }
-    if (!strncmp(key, "profile_background_tile", strlen(key))) { return TWTELM_PROFILE_BACKGROUND_TILE; }
-    if (!strncmp(key, "follow_request_sent", strlen(key))) { return TWTELM_FOLLOW_REQUEST_SENT; }
-    if (!strncmp(key, "profile_sidebar_fill_color", strlen(key))) { return TWTELM_PROFILE_SIDEBAR_FILL_COLOR; }
-    if (!strncmp(key, "protected", strlen(key))) { return TWTELM_PROTECTED; }
-    if (!strncmp(key, "default_profile_image", strlen(key))) { return TWTELM_DEFAULT_PROFILE_IMAGE; }
-    if (!strncmp(key, "contributors_enabled", strlen(key))) { return TWTELM_CONTRIBUTORS_ENABLED; }
-    if (!strncmp(key, "profile_sidebar_border_color", strlen(key))) { return TWTELM_PROFILE_SIDEBAR_BORDER_COLOR; }
-    if (!strncmp(key, "followers_count", strlen(key))) { return TWTELM_FOLLOWERS_COUNT; }
-    if (!strncmp(key, "profile_image_url", strlen(key))) { return TWTELM_PROFILE_IMAGE_URL; }
-    if (!strncmp(key, "favourites_count", strlen(key))) { return TWTELM_FAVOURITES_COUNT; }
-    if (!strncmp(key, "lang", strlen(key))) { return TWTELM_LANG; }
-    if (!strncmp(key, "profile_use_background_image", strlen(key))) { return TWTELM_PROFILE_USE_BACKGROUND_IMAGE; }
-    if (!strncmp(key, "utc_offset", strlen(key))) { return TWTELM_UTC_OFFSET; }
-    if (!strncmp(key, "url", strlen(key))) { return TWTELM_URL; }
+    if (compare(key, "place")) { return TWTELM_PLACE; }
+    if (compare(key, "geo")) { return TWTELM_GEO; }
+    if (compare(key, "retweeted")) { return TWTELM_RETWEETED; }
+    if (compare(key, "retweeted_status")) { return TWTELM_RETWEETED_STATUS; }
+    if (compare(key, "text")) { return TWTELM_TEXT; }
+    if (compare(key, "in_reply_to_status_id_str")) { return TWTELM_IN_REPLY_TO_STATUS_ID_STR; }
+    if (compare(key, "in_reply_to_status_id")) { return TWTELM_IN_REPLY_TO_STATUS_ID; }
+    if (compare(key, "in_reply_to_user_id_str")) { return TWTELM_IN_REPLY_TO_USER_ID_STR; }
+    if (compare(key, "in_reply_to_user_id")) { return TWTELM_IN_REPLY_TO_USER_ID; }
+    if (compare(key, "in_reply_to_user_id")) { return TWTELM_IN_REPLY_TO_USER_ID; }
+    if (compare(key, "truncated")) { return TWTELM_TRUNCATED; }
+    if (compare(key, "possibly_sensitive_editable")) { return TWTELM_POSSIBLY_SENSITIVE_EDITABLE; }
+    if (compare(key, "source")) { return TWTELM_SOURCE; }
+    if (compare(key, "contributors")) { return TWTELM_CONTRIBUTORS; }
+    if (compare(key, "retweet_count")) { return TWTELM_RETWEET_COUNT; }
+    if (compare(key, "favorited")) { return TWTELM_FAVORITED; }
+    if (compare(key, "created_at")) { return TWTELM_CREATED_AT; }
+    if (compare(key, "coordinates")) { return TWTELM_COORDINATES; }
+    if (compare(key, "possibly_sensitive")) { return TWTELM_POSSIBLY_SENSITIVE; }
+    if (compare(key, "id_str")) { return TWTELM_ID_STR; }
+    if (compare(key, "user")) { return TWTELM_USER; }
+    if (compare(key, "in_reply_to_screen_name")) { return TWTELM_IN_REPLY_TO_SCREEN_NAME; }
+    if (compare(key, "id")) { return TWTELM_ID; }
+    if (compare(key, "entities")) { return TWTELM_ENTITIES; }
+    if (compare(key, "name")) { return TWTELM_NAME; }
+    if (compare(key, "screen_name")) { return TWTELM_SCREEN_NAME; }
+    if (compare(key, "show_all_inline_media")) { return TWTELM_SHOW_ALL_INLINE_MEDIA; }
+    if (compare(key, "profile_text_color")) { return TWTELM_PROFILE_TEXT_COLOR; }
+    if (compare(key, "statuses_count")) { return TWTELM_STATUSES_COUNT; }
+    if (compare(key, "profile_background_image_url_https")) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL_HTTPS; }
+    if (compare(key, "profile_background_image_url")) { return TWTELM_PROFILE_BACKGROUND_IMAGE_URL; }
+    if (compare(key, "listed_count")) { return TWTELM_LISTED_COUNT; }
+    if (compare(key, "following")) { return TWTELM_FOLLOWING; }
+    if (compare(key, "verified")) { return TWTELM_VERIFIED; }
+    if (compare(key, "time_zone")) { return TWTELM_TIME_ZONE; }
+    if (compare(key, "profile_link_color")) { return TWTELM_PROFILE_LINK_COLOR; }
+    if (compare(key, "profile_image_url_https")) { return TWTELM_PROFILE_IMAGE_URL_HTTPS; }
+    if (compare(key, "location")) { return TWTELM_LOCATION; }
+    if (compare(key, "is_translator")) { return TWTELM_IS_TRANSLATOR; }
+    if (compare(key, "geo_enabled")) { return TWTELM_GEO_ENABLED; }
+    if (compare(key, "friends_count")) { return TWTELM_FRIENDS_COUNT; }
+    if (compare(key, "description")) { return TWTELM_DESCRIPTION; }
+    if (compare(key, "default_profile")) { return TWTELM_DEFAULT_PROFILE; }
+    if (compare(key, "profile_background_color")) { return TWTELM_PROFILE_BACKGROUND_COLOR; }
+    if (compare(key, "notifications")) { return TWTELM_NOTIFICATIONS; }
+    if (compare(key, "profile_background_tile")) { return TWTELM_PROFILE_BACKGROUND_TILE; }
+    if (compare(key, "follow_request_sent")) { return TWTELM_FOLLOW_REQUEST_SENT; }
+    if (compare(key, "profile_sidebar_fill_color")) { return TWTELM_PROFILE_SIDEBAR_FILL_COLOR; }
+    if (compare(key, "protected")) { return TWTELM_PROTECTED; }
+    if (compare(key, "default_profile_image")) { return TWTELM_DEFAULT_PROFILE_IMAGE; }
+    if (compare(key, "contributors_enabled")) { return TWTELM_CONTRIBUTORS_ENABLED; }
+    if (compare(key, "profile_sidebar_border_color")) { return TWTELM_PROFILE_SIDEBAR_BORDER_COLOR; }
+    if (compare(key, "followers_count")) { return TWTELM_FOLLOWERS_COUNT; }
+    if (compare(key, "profile_image_url")) { return TWTELM_PROFILE_IMAGE_URL; }
+    if (compare(key, "favourites_count")) { return TWTELM_FAVOURITES_COUNT; }
+    if (compare(key, "lang")) { return TWTELM_LANG; }
+    if (compare(key, "profile_use_background_image")) { return TWTELM_PROFILE_USE_BACKGROUND_IMAGE; }
+    if (compare(key, "utc_offset")) { return TWTELM_UTC_OFFSET; }
+    if (compare(key, "url")) { return TWTELM_URL; }
     return TWTELM_UNDEF;
 }
 
